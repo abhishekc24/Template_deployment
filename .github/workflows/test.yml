@@ -14,4 +14,4 @@ jobs:
 
     steps:
       - name: Set AWS Region
-        run: echo "::set-env name=AWS_REGION::${{ env.AWS_REGION }}"
+        run: echo "AWS_REGION=${{ secrets.MY_AWS_REGION }}" >> $GITHUB_ENV
