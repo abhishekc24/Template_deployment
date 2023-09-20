@@ -8,7 +8,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Set AWS Region
-        run: echo "::set-env name=AWS_REGION::${{ secrets.MY_AWS_REGION }}"
+        run: echo "AWS_REGION=${{ secrets.MY_AWS_REGION }}" >> $GITHUB_ENV
 
       - name: Display AWS Region
         run: echo "AWS Region is ${{ env.AWS_REGION }}"
