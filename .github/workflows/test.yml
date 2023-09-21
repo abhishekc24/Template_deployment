@@ -1,278 +1,63 @@
-{
-    "--DO NOT USE THIS TEMPLATE-- containerDefinitions": [
-      {
-        "name": "FACILITY_ID_vpi_ENVIRONMENT_backend",
-        "image": "AWS_ACCOUNT_ID.dkr.ecr.AWS_REGION.amazonaws.com/backend",
-        "cpu": 0,
-        "portMappings": [
-          {
-            "containerPort": 80,
-            "hostPort": 80,
-            "protocol": "tcp"
-          }
-        ],
-        "essential": true,
-        "environment": [],
-        "mountPoints": [],
-        "volumesFrom": [],
-        "secrets": [
-          {
-            "valueFrom": "arn:aws:secretsmanager:AWS_REGION:AWS_ACCOUNT_ID:secret:FACILITY_ID/FACILITY_SECRETS_ID:DEBUG_CONFIG::",
-            "name": "DEBUG_CONFIG"
-          },
-          {
-            "valueFrom": "arn:aws:secretsmanager:AWS_REGION:AWS_ACCOUNT_ID:secret:FACILITY_ID/FACILITY_SECRETS_ID:DOTNET_ENVIRONMENT::",
-            "name": "DOTNET_ENVIRONMENT"
-          },
+name: Deploy Backend
+run-name: Deploy to ${{ github.event.inputs.env }} ${{ github.event.inputs.facility }} by @${{ github.actor }}
+on:
+  workflow_dispatch:
+    branches:
+      - 'main'
+    inputs:
+      env:
+        type: choice
+        description: "Which Environment"
+        required: true
+        options:
+          - cert
+          - prod
+      facility:
+        description: "Facility Id Prefix"
+        required: true
+        type: string
 
-          {
-            "valueFrom": "arn:aws:secretsmanager:AWS_REGION:AWS_ACCOUNT_ID:secret:FACILITY_ID/FACILITY_SECRETS_ID:DB_HOST::",
-            "name": "DB_HOST"
-          },
-          {
-            "valueFrom": "arn:aws:secretsmanager:AWS_REGION:AWS_ACCOUNT_ID:secret:FACILITY_ID/FACILITY_SECRETS_ID:DB_PORT::",
-            "name": "DB_PORT"
-          },
-          {
-            "valueFrom": "arn:aws:secretsmanager:AWS_REGION:AWS_ACCOUNT_ID:secret:FACILITY_ID/FACILITY_SECRETS_ID:DB_DATABASE::",
-            "name": "DB_DATABASE"
-          },
-          {
-            "valueFrom": "arn:aws:secretsmanager:AWS_REGION:AWS_ACCOUNT_ID:secret:FACILITY_ID/FACILITY_SECRETS_ID:DB_USER::",
-            "name": "DB_USER"
-          },
-          {
-            "valueFrom": "arn:aws:secretsmanager:AWS_REGION:AWS_ACCOUNT_ID:secret:FACILITY_ID/FACILITY_SECRETS_ID:DB_PASSWORD::",
-            "name": "DB_PASSWORD"
-          },
-          {
-            "valueFrom": "arn:aws:secretsmanager:AWS_REGION:AWS_ACCOUNT_ID:secret:FACILITY_ID/FACILITY_SECRETS_ID:APP_LAUNCH_URL::",
-            "name": "APP_LAUNCH_URL"
-          },
-          {
-            "valueFrom": "arn:aws:secretsmanager:AWS_REGION:AWS_ACCOUNT_ID:secret:FACILITY_ID/FACILITY_SECRETS_ID:CDS_LAUNCH_URL::",
-            "name": "CDS_LAUNCH_URL"
-          },
-		      {
-            "valueFrom": "arn:aws:secretsmanager:AWS_REGION:AWS_ACCOUNT_ID:secret:FACILITY_ID/FACILITY_SECRETS_ID:CDS_PROVIDER_ICON_URL::",
-            "name": "CDS_PROVIDER_ICON_URL"
-          },
-		      {
-            "valueFrom": "arn:aws:secretsmanager:AWS_REGION:AWS_ACCOUNT_ID:secret:FACILITY_ID/FACILITY_SECRETS_ID:CDS_PROVIDER_URL::",
-            "name": "CDS_PROVIDER_URL"
-          },
+permissions:
+  id-token: write
+  contents: write
 
+jobs:
+  deploy:
+    name: Deploy
+    runs-on: ubuntu-latest
+    environment: Production
 
-          {
-            "valueFrom": "arn:aws:secretsmanager:AWS_REGION:AWS_ACCOUNT_ID:secret:ENVIRONMENT/vd/common-creds-rS84A6:VeradigmLocalCert::",
-            "name": "VERADIGM_LOCAL_CERT"
-          },
-          {
-            "valueFrom": "arn:aws:secretsmanager:AWS_REGION:AWS_ACCOUNT_ID:secret:ENVIRONMENT/vd/common-creds-rS84A6:VeradigmLocalCACert::",
-            "name": "VERADIGM_LOCAL_CA_CERT"
-          },
-          {
-            "valueFrom": "arn:aws:secretsmanager:AWS_REGION:AWS_ACCOUNT_ID:secret:ENVIRONMENT/vd/common-creds-rS84A6:VeradigmLocalIntermediateCACert::",
-            "name": "VERADIGM_LOCAL_INTERMEDIATE_CA_CERT"
-          },
-          {
-            "valueFrom": "arn:aws:secretsmanager:AWS_REGION:AWS_ACCOUNT_ID:secret:ENVIRONMENT/vd/common-creds-rS84A6:VeradigmLocalRootCert::",
-            "name": "VERADIGM_LOCAL_ROOT_CERT"   
-          },
-          {
-            "valueFrom": "arn:aws:secretsmanager:AWS_REGION:AWS_ACCOUNT_ID:secret:ENVIRONMENT/vd/common-creds-rS84A6:VeradigmLocalCAPrivateKey::",
-            "name": "VERADIGM_LOCAL_CA_PRIVATE_KEY"
-          },
-          {
-            "valueFrom": "arn:aws:secretsmanager:AWS_REGION:AWS_ACCOUNT_ID:secret:ENVIRONMENT/vd/common-creds-rS84A6:VeradigmLocalPrivateKey::",
-            "name": "VERADIGM_LOCAL_PRIVATE_KEY"
-          },
-          {
-            "valueFrom": "arn:aws:secretsmanager:AWS_REGION:AWS_ACCOUNT_ID:secret:ENVIRONMENT/vd/common-creds-rS84A6:VeradigmRemoteCert::",
-            "name": "VERADIGM_REMOTE_CERT"
-          },
-          {
-            "valueFrom": "arn:aws:secretsmanager:AWS_REGION:AWS_ACCOUNT_ID:secret:FACILITY_ID/FACILITY_SECRETS_ID:VERADIGM_GAP_REQUEST_URL::",
-            "name": "VERADIGM_GAP_REQUEST_URL"
-          },
-          {
-            "valueFrom": "arn:aws:secretsmanager:AWS_REGION:AWS_ACCOUNT_ID:secret:FACILITY_ID/FACILITY_SECRETS_ID:VERADIGM_SITE_ID::",
-            "name": "VERADIGM_SITE_ID"
-          },
-          {
-            "valueFrom": "arn:aws:secretsmanager:AWS_REGION:AWS_ACCOUNT_ID:secret:FACILITY_ID/FACILITY_SECRETS_ID:VERADIGM_TIN::",
-            "name": "VERADIGM_TIN"
-          },
+    steps:
+      - name: Validate
+        if: ${{ !fromJson(vars.BACKEND_CONFIG)[github.event.inputs.env]['facilities'][github.event.inputs.facility] }}
+        run: |
+          echo "Missing Facility Id in Config"
+          exit 1
 
-          {
-            "valueFrom": "arn:aws:secretsmanager:AWS_REGION:AWS_ACCOUNT_ID:secret:FACILITY_ID/FACILITY_SECRETS_ID:SMART_WEB_APP_ID::",
-            "name": "SMART_WEB_APP_ID"
-          },
-          {
-            "valueFrom": "arn:aws:secretsmanager:AWS_REGION:AWS_ACCOUNT_ID:secret:FACILITY_ID/FACILITY_SECRETS_ID:SMART_BACKEND_APP_ID::",
-            "name": "SMART_BACKEND_APP_ID"
-          },
-          {
-            "valueFrom": "arn:aws:secretsmanager:AWS_REGION:AWS_ACCOUNT_ID:secret:FACILITY_ID/FACILITY_SECRETS_ID:SMART_REDIRECT_URL::",
-            "name": "SMART_REDIRECT_URL"
-          },
+      - name: Checkout
+        uses: actions/checkout@v2
 
-          {
-            "valueFrom": "arn:aws:secretsmanager:AWS_REGION:AWS_ACCOUNT_ID:secret:FACILITY_ID/FACILITY_SECRETS_ID:JWT_SECRET::",
-            "name": "JWT_SECRET"
-          },
-          {
-            "valueFrom": "arn:aws:secretsmanager:AWS_REGION:AWS_ACCOUNT_ID:secret:FACILITY_ID/FACILITY_SECRETS_ID:JWT_ISSUER::",
-            "name": "JWT_ISSUER"
-          },
-          {
-            "valueFrom": "arn:aws:secretsmanager:AWS_REGION:AWS_ACCOUNT_ID:secret:FACILITY_ID/FACILITY_SECRETS_ID:JWT_BASEURL::",
-            "name": "JWT_BASEURL"
-          },
-          {
-            "valueFrom": "arn:aws:secretsmanager:AWS_REGION:AWS_ACCOUNT_ID:secret:FACILITY_ID/FACILITY_SECRETS_ID:JWT_ACCESS_EXPIRATION::",
-            "name": "JWT_ACCESS_EXPIRATION"
-          },
-          {
-            "valueFrom": "arn:aws:secretsmanager:AWS_REGION:AWS_ACCOUNT_ID:secret:FACILITY_ID/FACILITY_SECRETS_ID:JWT_REFRESH_EXPIRATION::",
-            "name": "JWT_REFRESH_EXPIRATION"
-          },
+      - name: Prepare the .env file
+        env:
+          REACT_APP_API_URL: ${{ format('https://{0}-api.vpi-cust.insiteflow.io/api/v1', github.event.inputs.facility) }}
+        run: |
+          echo "Setting env file entry REACT_APP_API_URL to be ${{ env.REACT_APP_API_URL }}"
+          echo "REACT_APP_API_URL=${{ env.REACT_APP_API_URL }}" > .env
+          cat .env
 
+      - name: Prepare Task Definition
+        uses: nowactions/envsubst@v1
+        with:
+          input: ./.aws/task-definition.json.tmpl
+          output: ./.aws/task-definition.json
+        env:
+          ENVIRONMENT: ${{ github.event.inputs.env }}
+          AWS_REGION: ${{ fromJson(vars.BACKEND_CONFIG)[github.event.inputs.env]['aws_region'] }}
+          AWS_ACCOUNT_ID: ${{ fromJson(vars.BACKEND_CONFIG)[github.event.inputs.env]['aws_account_id'] }}
+          FACILITY_ID: ${{ github.event.inputs.facility }}
+          FACILITY_SECRETS_ID: ${{ fromJson(vars.BACKEND_CONFIG)[github.event.inputs.env]['facilities'][github.event.inputs.facility]['secrets_id'] }}
+          COMMON_SECRETS_ID: ${{ fromJson(vars.BACKEND_CONFIG)[github.event.inputs.env]['common_secrets_id'] }}
 
-          {
-            "valueFrom": "arn:aws:secretsmanager:AWS_REGION:AWS_ACCOUNT_ID:secret:FACILITY_ID/FACILITY_SECRETS_ID:UNITY_PRO_BASE_URI::",
-            "name": "UNITY_PRO_BASE_URI"
-          },
-          {
-            "valueFrom": "arn:aws:secretsmanager:AWS_REGION:AWS_ACCOUNT_ID:secret:FACILITY_ID/FACILITY_SECRETS_ID:UNITY_PRO_UNITY_APP_NAME::",
-            "name": "UNITY_PRO_UNITY_APP_NAME"
-          },
-          {
-            "valueFrom": "arn:aws:secretsmanager:AWS_REGION:AWS_ACCOUNT_ID:secret:FACILITY_ID/FACILITY_SECRETS_ID:UNITY_PRO_UBIQUITY_ID::",
-            "name": "UNITY_PRO_UBIQUITY_ID"
-          },
-          {
-            "valueFrom": "arn:aws:secretsmanager:AWS_REGION:AWS_ACCOUNT_ID:secret:ENVIRONMENT/vd/common-creds-rS84A6:serviceUsername::",
-            "name": "UNITY_PRO_SERVICE_USERNAME"
-          },
-          {
-            "valueFrom": "arn:aws:secretsmanager:AWS_REGION:AWS_ACCOUNT_ID:secret:ENVIRONMENT/vd/common-creds-rS84A6:servicePassword::",
-            "name": "UNITY_PRO_SERVICE_PASSWORD"
-          },
-          {
-            "valueFrom": "arn:aws:secretsmanager:AWS_REGION:AWS_ACCOUNT_ID:secret:FACILITY_ID/FACILITY_SECRETS_ID:UNITY_PRO_SCHEDULED_STATUS_FILTER::",
-            "name": "UNITY_PRO_SCHEDULED_STATUS_FILTER"
-          },
-          {
-            "valueFrom": "arn:aws:secretsmanager:AWS_REGION:AWS_ACCOUNT_ID:secret:FACILITY_ID/FACILITY_SECRETS_ID:UNITY_PRO_ENCOUNTER_LIST_DAYS_BACK::",
-            "name": "UNITY_PRO_ENCOUNTER_LIST_DAYS_BACK"
-          },
-          {
-            "valueFrom": "arn:aws:secretsmanager:AWS_REGION:AWS_ACCOUNT_ID:secret:FACILITY_ID/FACILITY_SECRETS_ID:UNITY_PRO_TASK_TYPE::",
-            "name": "UNITY_PRO_TASK_TYPE"
-          },
-          {
-            "valueFrom": "arn:aws:secretsmanager:AWS_REGION:AWS_ACCOUNT_ID:secret:FACILITY_ID/FACILITY_SECRETS_ID:UNITY_PRO_SOURCE::",
-            "name": "UNITY_PRO_SOURCE"
-          },
-
-
-          {
-            "valueFrom": "arn:aws:secretsmanager:AWS_REGION:AWS_ACCOUNT_ID:secret:ENVIRONMENT/vd/common-creds-rS84A6:UnityBaseUrl::",
-            "name": "UNITY_TW_BASE_URI"
-          },
-          {
-            "valueFrom": "arn:aws:secretsmanager:AWS_REGION:AWS_ACCOUNT_ID:secret:ENVIRONMENT/vd/common-creds-rS84A6:UnityAppName::",
-            "name": "UNITY_TW_UNITY_APP_NAME"
-          },
-          {
-            "valueFrom": "arn:aws:secretsmanager:AWS_REGION:AWS_ACCOUNT_ID:secret:FACILITY_ID/FACILITY_SECRETS_ID:UNITY_TW_UBIQUITY_ID::",
-            "name": "UNITY_TW_UBIQUITY_ID"
-          },
-          {
-            "valueFrom": "arn:aws:secretsmanager:AWS_REGION:AWS_ACCOUNT_ID:secret:ENVIRONMENT/vd/common-creds-rS84A6:UnityServiceUsername::",
-            "name": "UNITY_TW_SERVICE_USERNAME"
-          },
-          {
-            "valueFrom": "arn:aws:secretsmanager:AWS_REGION:AWS_ACCOUNT_ID:secret:ENVIRONMENT/vd/common-creds-rS84A6:UnityServicePassword::",
-            "name": "UNITY_TW_SERVICE_PASSWORD"
-          },
-          {
-            "valueFrom": "arn:aws:secretsmanager:AWS_REGION:AWS_ACCOUNT_ID:secret:FACILITY_ID/FACILITY_SECRETS_ID:UNITY_TW_SCHEDULED_STATUS_FILTER::",
-            "name": "UNITY_TW_SCHEDULED_STATUS_FILTER"
-          },
-          {
-            "valueFrom": "arn:aws:secretsmanager:AWS_REGION:AWS_ACCOUNT_ID:secret:FACILITY_ID/FACILITY_SECRETS_ID:UNITY_TW_ENCOUNTER_LIST_DAYS_BACK::",
-            "name": "UNITY_TW_ENCOUNTER_LIST_DAYS_BACK"
-          },
-          {
-            "valueFrom": "arn:aws:secretsmanager:AWS_REGION:AWS_ACCOUNT_ID:secret:ENVIRONMENT/vd/common-creds-rS84A6:UnityTaskType::",
-            "name": "UNITY_TW_TASK_TYPE"
-          },
-          {
-            "valueFrom": "arn:aws:secretsmanager:AWS_REGION:AWS_ACCOUNT_ID:secret:FACILITY_ID/FACILITY_SECRETS_ID:UNITY_TW_SOURCE::",
-            "name": "UNITY_TW_SOURCE"
-          },
-          {
-            "valueFrom": "arn:aws:secretsmanager:AWS_REGION:AWS_ACCOUNT_ID:secret:FACILITY_ID/FACILITY_SECRETS_ID:UNITY_TW_ENCOUNTER_TYPE::",
-            "name": "UNITY_TW_ENCOUNTER_TYPE"
-          },
-          {
-            "valueFrom": "arn:aws:secretsmanager:AWS_REGION:AWS_ACCOUNT_ID:secret:FACILITY_ID/FACILITY_SECRETS_ID:UNITY_TW_APPOINTMENT_PROVIDER::",
-            "name": "UNITY_TW_APPOINTMENT_PROVIDER"
-          },
-          {
-            "valueFrom": "arn:aws:secretsmanager:AWS_REGION:AWS_ACCOUNT_ID:secret:FACILITY_ID/FACILITY_SECRETS_ID:UNITY_TW_FORCE_NEW_ENCOUNTER::",
-            "name": "UNITY_TW_FORCE_NEW_ENCOUNTER"
-          },
-
-
-          {
-            "valueFrom": "arn:aws:secretsmanager:AWS_REGION:AWS_ACCOUNT_ID:secret:FACILITY_ID/FACILITY_SECRETS_ID:MOCK_EHR::",
-            "name": "MOCK_EHR"
-          },
-          {
-            "valueFrom": "arn:aws:secretsmanager:AWS_REGION:AWS_ACCOUNT_ID:secret:FACILITY_ID/FACILITY_SECRETS_ID:MOCK_CDS_HOOKS::",
-            "name": "MOCK_CDS_HOOKS"
-          },
-          {
-            "valueFrom": "arn:aws:secretsmanager:AWS_REGION:AWS_ACCOUNT_ID:secret:FACILITY_ID/FACILITY_SECRETS_ID:MOCK_PROVIDER::",
-            "name": "MOCK_PROVIDER"
-          },
-
-          {
-            "valueFrom": "arn:aws:secretsmanager:AWS_REGION:AWS_ACCOUNT_ID:secret:FACILITY_ID/FACILITY_SECRETS_ID:EHR_TYPE::",
-            "name": "EHR_TYPE"
-          },
-          {
-            "valueFrom": "arn:aws:secretsmanager:AWS_REGION:AWS_ACCOUNT_ID:secret:FACILITY_ID/FACILITY_SECRETS_ID:EHR_USER::",
-            "name": "EHR_USER"
-          },
-          {
-            "valueFrom": "arn:aws:secretsmanager:AWS_REGION:AWS_ACCOUNT_ID:secret:FACILITY_ID/FACILITY_SECRETS_ID:EHR_PASSWORD::",
-            "name": "EHR_PASSWORD"
-          }
-          ],
-        "logConfiguration": {
-          "logDriver": "awslogs",
-          "options": {
-            "awslogs-create-group": "true",
-            "awslogs-group": "/ecs/FACILITY_ID_vpi_ENVIRONMENT_backend",
-            "awslogs-region": "AWS_REGION",
-            "awslogs-stream-prefix": "ecs"
-          }
-        }
-      }
-    ],
-    "family": "FACILITY_ID_vpi_ENVIRONMENT_backend",
-    "taskRoleArn": "arn:aws:iam::AWS_ACCOUNT_ID:role/ecsTaskExecutionRole",
-    "executionRoleArn": "arn:aws:iam::AWS_ACCOUNT_ID:role/ecsTaskExecutionRole",
-    "networkMode": "awsvpc",
-    "volumes": [],
-    "requiresCompatibilities": [
-      "FARGATE"
-    ],
-    "cpu": "512",
-    "memory": "1024"
-  }
-  
+      - name: Show contents of new task-definition.json
+        run: |
+          cat ./.aws/task-definition.json
