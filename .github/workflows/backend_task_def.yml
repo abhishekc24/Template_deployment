@@ -59,4 +59,4 @@ jobs:
       - name: Show contents of new task-definition.json
         run: |
           cat ./.aws/backend_task_def.json
-                   backend_task_def.yml·
+                   backend_task_def.yml
