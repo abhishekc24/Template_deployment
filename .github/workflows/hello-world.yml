@@ -46,7 +46,7 @@ jobs:
       - name: Prepare Task Definition
         uses: nowactions/envsubst@v1
         with:
-          input: ./.aws/task-definition.json.tmpl
+          input: ./.aws/Testing_backend
           output: ./.aws/task-definition.json
         env:
           ENVIRONMENT: ${{ github.event.inputs.env }}
