@@ -12,11 +12,17 @@ on:
         options:
           - cert
           - prod
-       
       facility:
         description: "Facility Id Prefix"
         required: true
         type: string
+      use_common_secrets:
+        description: "Use Common Secrets Key?"
+        required: true
+        type: choice
+        options:
+          - yes
+          - no
 
 permissions:
   id-token: write
