@@ -2,9 +2,9 @@ name: Deploy to Amazon ECS
 run-name: Deploy to ${{ github.event.inputs.env }} ${{ github.event.inputs.facility }} by @${{ github.actor }}
 on:
   workflow_dispatch:
-    branches:
+     branches:
       - 'main'
-    inputs:
+     inputs:
       env:
         type: choice
         description: "Which Environment"
@@ -12,6 +12,12 @@ on:
         options:
           - cert
           - prod
+        type: choice
+        description: "Want to use Common Secret key "
+        required: true
+        options:
+          - Yes
+          - No
       facility:
         description: "Facility Id Prefix"
         required: true
