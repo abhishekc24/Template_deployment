@@ -12,12 +12,7 @@ on:
         options:
           - cert
           - prod
-        type: choice
-        description: "Want to use Common Secret key "
-        required: true
-        options:
-          - Yes
-          - No
+       
       facility:
         description: "Facility Id Prefix"
         required: true
