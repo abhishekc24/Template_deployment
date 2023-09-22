@@ -46,8 +46,8 @@ jobs:
       - name: Prepare Task Definition
         uses: nowactions/envsubst@v1
         with:
-          input: ./.aws/backend_task_def.json.tmpl
-          output: ./.aws/backend_task_def.json
+          input: ./.aws/backend_task_def_common.json.tmpl
+          output: ./.aws/backend_task_def_common.json
         env:
           ENVIRONMENT: ${{ github.event.inputs.env }}
           ECR_REPOSITORY: backend
@@ -67,4 +67,4 @@ jobs:
 
       - name: Show contents of new task-definition.json
         run: |
-          cat ./.aws/backend_task_def.json
+          cat ./.aws/backend_task_def_common.json
