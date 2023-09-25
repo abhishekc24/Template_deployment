@@ -43,32 +43,6 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v2
 
-      - name: Prepare Task Definition
-        uses: nowactions/envsubst@v1
-        with:
-          input: ./.aws/backend_task_def.json.tmpl
-          output: ./.aws/backend_task_def.json
-        env:
-          ENVIRONMENT: ${{ github.event.inputs.env }}
-          ECR_REPOSITORY: backend
-          ECS_CLUSTER: vpi_[github.event.inputs.env]_app_ecs_cluster
-
-          BACKEND_ECS_SERVICE: ${{ format('{0}_vpi_{1}_backend', github.event.inputs.facility, github.event.inputs.env) }}
-          BACKEND_ECS_TASK_DEFINITION: ${{ format('.aws/backend_{0}_{1}.json', github.event.inputs.env, github.event.inputs.facility) }}
-
-          CONTAINER_NAME: ${{ format('{0}_vpi_{1}_backend', github.event.inputs.facility, github.event.inputs.env) }}
-
-
-          AWS_REGION: ${{ fromJson(vars.BACKEND_CONFIG)[github.event.inputs.env]['AWS_REGION'] }}
-          AWS_ACCOUNT_ID: ${{ fromJson(vars.BACKEND_CONFIG)[github.event.inputs.env]['AWS_ACCOUNT_ID'] }}
-          FACILITY_ID: ${{ github.event.inputs.facility }}
-          FACILITY_SECRETS_ID: ${{ fromJson(vars.BACKEND_CONFIG)[github.event.inputs.env]['facilities'][github.event.inputs.facility]['secrets_id'] }}
-          COMMON_SECRETS_ID: ${{ fromJson(vars.BACKEND_CONFIG)[github.event.inputs.env]['common_secrets_id'] }}
-
-      - name: Show contents of new task-definition.json
-        run: |
-          cat ./.aws/backend_task_def.json
-
       # Conditionally run the second Prepare Task Definition step
       - name: Prepare Task Definition (Conditional)
         if: ${{ github.event.inputs.use_common_secrets == 'yes' }}
@@ -96,3 +70,30 @@ jobs:
       - name: Show contents of new backend_task_def.json (After Condition)
         run: |
           cat ./.aws/backend_task_def_common.json
+
+      - name: Prepare Task Definition
+        if: ${{ github.event.inputs.use_common_secrets == 'no' }}
+        uses: nowactions/envsubst@v1
+        with:
+          input: ./.aws/backend_task_def.json.tmpl
+          output: ./.aws/backend_task_def.json
+        env:
+          ENVIRONMENT: ${{ github.event.inputs.env }}
+          ECR_REPOSITORY: backend
+          ECS_CLUSTER: vpi_[github.event.inputs.env]_app_ecs_cluster
+
+          BACKEND_ECS_SERVICE: ${{ format('{0}_vpi_{1}_backend', github.event.inputs.facility, github.event.inputs.env) }}
+          BACKEND_ECS_TASK_DEFINITION: ${{ format('.aws/backend_{0}_{1}.json', github.event.inputs.env, github.event.inputs.facility) }}
+
+          CONTAINER_NAME: ${{ format('{0}_vpi_{1}_backend', github.event.inputs.facility, github.event.inputs.env) }}
+
+
+          AWS_REGION: ${{ fromJson(vars.BACKEND_CONFIG)[github.event.inputs.env]['AWS_REGION'] }}
+          AWS_ACCOUNT_ID: ${{ fromJson(vars.BACKEND_CONFIG)[github.event.inputs.env]['AWS_ACCOUNT_ID'] }}
+          FACILITY_ID: ${{ github.event.inputs.facility }}
+          FACILITY_SECRETS_ID: ${{ fromJson(vars.BACKEND_CONFIG)[github.event.inputs.env]['facilities'][github.event.inputs.facility]['secrets_id'] }}
+          COMMON_SECRETS_ID: ${{ fromJson(vars.BACKEND_CONFIG)[github.event.inputs.env]['common_secrets_id'] }}
+
+      - name: Show contents of new task-definition.json
+        run: |
+          cat ./.aws/backend_task_def.json
