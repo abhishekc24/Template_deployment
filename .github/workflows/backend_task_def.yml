@@ -1,5 +1,3 @@
-most upadted with 4 condition 
-
 name: Deploy to Amazon ECS
 run-name: Deploy to ${{ github.event.inputs.env }} ${{ github.event.inputs.facility }} by @${{ github.actor }}
 on:
