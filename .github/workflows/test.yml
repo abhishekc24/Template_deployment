@@ -1,63 +1,23 @@
-name: Deploy Backend
-run-name: Deploy to ${{ github.event.inputs.env }} ${{ github.event.inputs.facility }} by @${{ github.actor }}
-on:
-  workflow_dispatch:
-    branches:
-      - 'main'
-    inputs:
-      env:
-        type: choice
-        description: "Which Environment"
-        required: true
-        options:
-          - cert
-          - prod
-      facility:
-        description: "Facility Id Prefix"
-        required: true
-        type: string
+name: If-Else Condition Example
 
-permissions:
-  id-token: write
-  contents: write
+on:
+  push:
+    branches:
+      - main
 
 jobs:
-  deploy:
-    name: Deploy
+  if_else_example:
     runs-on: ubuntu-latest
-    environment: Production
 
     steps:
-      - name: Validate
-        if: ${{ !fromJson(vars.BACKEND_CONFIG)[github.event.inputs.env]['facilities'][github.event.inputs.facility] }}
-        run: |
-          echo "Missing Facility Id in Config"
-          exit 1
+      - name: Check Condition
+        run: echo "::set-output name=condition::${{ github.event.inputs.condition }}"
+        id: check_condition
 
-      - name: Checkout
-        uses: actions/checkout@v2
+      - name: Execute if condition is true
+        if: steps.check_condition.outputs.condition == 'true'
+        run: echo "Condition is true, do something..."
 
-      - name: Prepare the .env file
-        env:
-          REACT_APP_API_URL: ${{ format('https://{0}-api.vpi-cust.insiteflow.io/api/v1', github.event.inputs.facility) }}
-        run: |
-          echo "Setting env file entry REACT_APP_API_URL to be ${{ env.REACT_APP_API_URL }}"
-          echo "REACT_APP_API_URL=${{ env.REACT_APP_API_URL }}" > .env
-          cat .env
-
-      - name: Prepare Task Definition
-        uses: nowactions/envsubst@v1
-        with:
-          input: ./.aws/task-definition.json.tmpl
-          output: ./.aws/task-definition.json
-        env:
-          ENVIRONMENT: ${{ github.event.inputs.env }}
-          AWS_REGION: ${{ fromJson(vars.BACKEND_CONFIG)[github.event.inputs.env]['aws_region'] }}
-          AWS_ACCOUNT_ID: ${{ fromJson(vars.BACKEND_CONFIG)[github.event.inputs.env]['aws_account_id'] }}
-          FACILITY_ID: ${{ github.event.inputs.facility }}
-          FACILITY_SECRETS_ID: ${{ fromJson(vars.BACKEND_CONFIG)[github.event.inputs.env]['facilities'][github.event.inputs.facility]['secrets_id'] }}
-          COMMON_SECRETS_ID: ${{ fromJson(vars.BACKEND_CONFIG)[github.event.inputs.env]['common_secrets_id'] }}
-
-      - name: Show contents of new task-definition.json
-        run: |
-          cat ./.aws/task-definition.json
+      - name: Execute if condition is false
+        if: steps.check_condition.outputs.condition == 'false'
+        run: echo "Condition is false, do something else..."
