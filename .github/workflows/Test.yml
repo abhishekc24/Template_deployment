@@ -1,0 +1,47 @@
+name: Deploy to Amazon ECS
+run-name: Deploy to ${{ github.event.inputs.env }} ${{ github.event.inputs.facility }} by @${{ github.actor }}
+on:
+  workflow_dispatch:
+    branches:
+      - 'main'
+    inputs:
+      env:
+      use_common_secrets:
+        description: "Use Common Secrets Key?"
+        required: true
+        type: choice
+        options:
+          - yes
+          - no
+
+permissions:
+  id-token: write
+  contents: write
+
+jobs:
+  deploy:
+    name: Deploy
+    runs-on: ubuntu-latest
+    environment: Production
+
+    steps:
+      - name: Validate
+        if: ${{ !fromJson(vars.BACKEND_CONFIG)[github.event.inputs.env]['facilities'][github.event.inputs.facility] }}
+        run: |
+          echo "Missing Facility Id in Config"
+          exit 1
+      - name: Checkout
+        uses: actions/checkout@v2
+
+      - name: Prepare Task Definition (Conditional)
+        if: ${{ github.event.inputs.use_common_secrets == 'yes' }}
+        run: |
+          echo "Running script for use_common_secrets == 'yes'"
+          .github/workflows/backend_task_def.yml
+          
+      - name: Prepare Task Definition (else)
+        if: ${{ github.event.inputs.use_common_secrets == 'no' }}
+        run: |
+          echo "Running script for use_common_secrets == 'no'"
+         
+
