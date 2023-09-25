@@ -70,6 +70,7 @@ jobs:
       - name: Show contents of new backend_task_def.json (After Condition)
         run: |
           cat ./.aws/backend_task_def_common.json
+           shell: /usr/bin/bash -e {0}
 
       - name: Prepare Task Definition
         if: ${{ github.event.inputs.use_common_secrets == 'no' }}
@@ -97,3 +98,5 @@ jobs:
       - name: Show contents of new task-definition.json
         run: |
           cat ./.aws/backend_task_def.json
+          shell: /usr/bin/bash -e {0}
+
