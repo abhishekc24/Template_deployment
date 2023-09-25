@@ -90,7 +90,6 @@ jobs:
             FACILITY_ID: ${{ github.event.inputs.facility }}
             FACILITY_SECRETS_ID: ${{ fromJson(vars.BACKEND_CONFIG)[github.event.inputs.env]['facilities'][github.event.inputs.facility]['secrets_id'] }}
 
-            {{ end }}
 
       - name: Show contents of new task-definition.json (After Condition)
         if: ${{ github.event.inputs.use_common_secrets == 'yes' }}
