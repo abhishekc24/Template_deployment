@@ -44,7 +44,7 @@ jobs:
         uses: actions/checkout@v2
 
       - name: Prepare Task Definition (Conditional)
-        if: ${{ github.event.inputs.use_common_secrets == 'yes' }}
+        if : github.event.inputs.use_common_secrets == 'yes'
         run: |
           echo "Prepare Task Definition (Conditional) step"
           uses: nowactions/envsubst@v1
@@ -68,7 +68,7 @@ jobs:
             COMMON_SECRETS_ID: ${{ fromJson(vars.BACKEND_CONFIG)[github.event.inputs.env]['common_secrets_id'] }}
 
       - name: Prepare Task Definition(else)
-        if: ${{ github.event.inputs.use_common_secrets == 'no' }}
+        if : github.event.inputs.use_common_secrets == 'no'
         run: |
           echo "Prepare Task Definition (else) step"
           uses: nowactions/envsubst@v1
@@ -92,12 +92,12 @@ jobs:
 
 
       - name: Show contents of new task-definition.json (After Condition)
-        if: ${{ github.event.inputs.use_common_secrets == 'yes' }}
+        if: github.event.inputs.use_common_secrets == 'yes'
         run: |
           cat ./.aws/backend_task_def_common.json
             
       - name: Show contents of new task-definition.json
-        if: ${{ github.event.inputs.use_common_secrets == 'no' }}
+        if: github.event.inputs.use_common_secrets == 'no'
         run: |
          cat ./.aws/backend_task_def.json
 
