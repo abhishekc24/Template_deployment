@@ -1,4 +1,4 @@
-name: Deploy to Amazon ECS
+name: Backend 
 run-name: Deploy to ${{ github.event.inputs.env }} ${{ github.event.inputs.facility }} by @${{ github.actor }}
 on:
   workflow_dispatch:
