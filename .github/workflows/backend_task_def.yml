@@ -36,7 +36,7 @@ jobs:
 
     steps:
       - name: Validate
-        if: ${{ !fromJson(vars.BACKEND_CONFIG)[github.event.inputs.env]['facilities'][github.event.inputs.facility] }}
+        if: (!fromJson(vars.BACKEND_CONFIG)[github.event.inputs.env]['facilities'][github.event.inputs.facility])
         run: |
           echo "Missing Facility Id in Config"
           exit 1
