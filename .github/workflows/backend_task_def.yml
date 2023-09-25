@@ -45,7 +45,7 @@ jobs:
 
       # Conditionally run the second Prepare Task Definition step
       - name: Prepare Task Definition (Conditional)
-        if: ${{ github.event.inputs.use_common_secrets == 'yes' }}
+     
         uses: nowactions/envsubst@v1
         with:
           input: ./.aws/backend_task_def_common.json.tmpl
