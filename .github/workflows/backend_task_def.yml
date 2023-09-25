@@ -92,7 +92,7 @@ jobs:
 
             {{ end }}
 
-      - name: Show contents of new backend_task_def.json (After Condition)
+      - name: Show contents of new task-definition.json (After Condition)
         if: ${{ github.event.inputs.use_common_secrets == 'yes' }}
         run: |
           cat ./.aws/backend_task_def_common.json
