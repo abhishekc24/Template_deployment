@@ -1,6 +1,5 @@
-
-name: Deploy to Amazon ECS
-run-name: Deploy to ${{ github.event.inputs.env }} ${{ github.event.inputs.facility }} by @${{ github.actor }}
+name: Deploy Backend
+run-name: Deploy to ${{ github.event.inputs.env }} ${{github.event.inputs.facility }} by @${{ github.actor }}
 on:
   workflow_dispatch:
     branches:
@@ -11,8 +10,8 @@ on:
         description: "Which Environment"
         required: true
         options:
-          - cert
-          - prod
+        - cert
+        - prod
       facility:
         description: "Facility Id Prefix"
         required: true
