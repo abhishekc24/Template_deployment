@@ -43,13 +43,12 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v2
 
-      # Conditionally run the second Prepare Task Definition step
-      - name: Prepare Task Definition (Conditional)
-     
+      - name: Prepare Task Definition
+        
         uses: nowactions/envsubst@v1
         with:
-          input: ./.aws/backend_task_def_common.json.tmpl
-          output: ./.aws/backend_task_def_common.json
+          input: ./.aws/backend_task_def.json.tmpl
+          output: ./.aws/backend_task_def.json
         env:
           ENVIRONMENT: ${{ github.event.inputs.env }}
           ECR_REPOSITORY: backend
@@ -67,8 +66,8 @@ jobs:
           FACILITY_SECRETS_ID: ${{ fromJson(vars.BACKEND_CONFIG)[github.event.inputs.env]['facilities'][github.event.inputs.facility]['secrets_id'] }}
           COMMON_SECRETS_ID: ${{ fromJson(vars.BACKEND_CONFIG)[github.event.inputs.env]['common_secrets_id'] }}
 
-      - name: Show contents of new backend_task_def.json (After Condition)
+      - name: Show contents of new task-definition.json
         run: |
-          cat ./.aws/backend_task_def_common.json
+         cat ./.aws/backend_task_def.json
 
    
