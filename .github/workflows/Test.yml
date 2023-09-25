@@ -5,6 +5,17 @@ on:
     branches:
       - 'main'
     inputs:
+       env:
+        type: choice
+        description: "Which Environment"
+        required: true
+        options:
+          - cert
+          - prod
+      facility:
+        description: "Facility Id Prefix"
+        required: true
+        type: string
       use_common_secrets:
         description: "Use Common Secrets Key?"
         required: true
