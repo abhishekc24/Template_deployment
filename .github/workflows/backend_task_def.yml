@@ -93,7 +93,6 @@ jobs:
   
             CONTAINER_NAME: ${{ format('{0}_vpi_{1}_backend', github.event.inputs.facility, github.event.inputs.env) }}
   
-  
             AWS_REGION: ${{ fromJson(vars.BACKEND_CONFIG)[github.event.inputs.env]['AWS_REGION'] }}
             AWS_ACCOUNT_ID: ${{ fromJson(vars.BACKEND_CONFIG)[github.event.inputs.env]['AWS_ACCOUNT_ID'] }}
             FACILITY_ID: ${{ github.event.inputs.facility }}
