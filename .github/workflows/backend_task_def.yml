@@ -55,7 +55,7 @@ jobs:
           env:
             ENVIRONMENT: ${{ github.event.inputs.env }}
             ECR_REPOSITORY: backend
-            ECS_CLUSTER: vpi_[github.event.inputs.env]_app_ecs_cluster
+            ECS_CLUSTER: vpi_${{ github.event.inputs.env }}_app_ecs_cluster
   
             BACKEND_ECS_SERVICE: ${{ format('{0}_vpi_{1}_backend', github.event.inputs.facility, github.event.inputs.env) }}
             BACKEND_ECS_TASK_DEFINITION: ${{ format('.aws/backend_{0}_{1}.json', github.event.inputs.env, github.event.inputs.facility) }}
