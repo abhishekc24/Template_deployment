@@ -16,13 +16,6 @@ on:
         description: "Facility Id Prefix"
         required: true
         type: string
-      use_common_secrets:
-        description: "Use Common Secrets Key?"
-        required: true
-        type: choice
-        options:
-          - yes
-          - no
 
 permissions:
   id-token: write
@@ -43,13 +36,12 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v2
 
-      - name: Prepare Task Definition (Conditional)
-        if : github.event.inputs.use_common_secrets == 'yes'
+      - name: Prepare Task Definition
         run: |
-          echo "Prepare Task Definition (Conditional) step"
+          echo "Prepare Task Definition step"
           uses: nowactions/envsubst@v1
           with:
-            input: ./.aws/backend_task_def_common.json.tmpl
+            input: ${{env.INPUT_TEMPLATE}}
             output: ./.aws/backend_task_def_common.json
           env:
             ENVIRONMENT: ${{ github.event.inputs.env }}
@@ -66,39 +58,11 @@ jobs:
             FACILITY_ID: ${{ github.event.inputs.facility }}
             FACILITY_SECRETS_ID: ${{ fromJson(vars.BACKEND_CONFIG)[github.event.inputs.env]['facilities'][github.event.inputs.facility]['secrets_id'] }}
             COMMON_SECRETS_ID: ${{ fromJson(vars.BACKEND_CONFIG)[github.event.inputs.env]['common_secrets_id'] }}
-
-      - name: Prepare Task Definition(else)
-        if : github.event.inputs.use_common_secrets == 'no'
-        run: |
-          echo "Prepare Task Definition (else) step"
-          uses: nowactions/envsubst@v1
-          with:
-            input: ./.aws/backend_task_def.json.tmpl
-            output: ./.aws/backend_task_def.json
-          env:
-            ENVIRONMENT: ${{ github.event.inputs.env }}
-            ECR_REPOSITORY: backend
-            ECS_CLUSTER: vpi_[github.event.inputs.env]_app_ecs_cluster
-  
-            BACKEND_ECS_SERVICE: ${{ format('{0}_vpi_{1}_backend', github.event.inputs.facility, github.event.inputs.env) }}
-            BACKEND_ECS_TASK_DEFINITION: ${{ format('.aws/backend_{0}_{1}.json', github.event.inputs.env, github.event.inputs.facility) }}
-  
-            CONTAINER_NAME: ${{ format('{0}_vpi_{1}_backend', github.event.inputs.facility, github.event.inputs.env) }}
-  
-            AWS_REGION: ${{ fromJson(vars.BACKEND_CONFIG)[github.event.inputs.env]['AWS_REGION'] }}
-            AWS_ACCOUNT_ID: ${{ fromJson(vars.BACKEND_CONFIG)[github.event.inputs.env]['AWS_ACCOUNT_ID'] }}
-            FACILITY_ID: ${{ github.event.inputs.facility }}
-            FACILITY_SECRETS_ID: ${{ fromJson(vars.BACKEND_CONFIG)[github.event.inputs.env]['facilities'][github.event.inputs.facility]['secrets_id'] }}
-
-
-      - name: Show contents of new task-definition.json (After Condition)
-        if: github.event.inputs.use_common_secrets == 'yes'
-        run: |
-          cat ./.aws/backend_task_def_common.json
+            INPUT_TEMPLATE: ${{ fromJson(vars.BACKEND_CONFIG)[github.event.inputs.env]['facilities'][github.event.inputs.facility]['override_common_secrets'] == "true" ? "./.aws/backend_task_def_common.json.tmpl":"./aws/backend_task_def.json.tmpl" }}
             
       - name: Show contents of new task-definition.json
-        if: github.event.inputs.use_common_secrets == 'no'
         run: |
          cat ./.aws/backend_task_def.json
+
 
   
